@@ -1,0 +1,468 @@
+@echo off
+setlocal enabledelayedexpansion
+set "pass=9m."
+color 0A
+title [  Milos Toolkit  ]
+:MENU
+cls
+echo ooo        ooooo ooooo oooo            
+echo `88.       .888' `888' `888            
+echo  888b     d'888   888   888     .ooooo.  
+echo  8 Y88. .P  888   888   888    d88' `88b 
+echo  8  `888'   888   888   888    888   888 
+echo  8    Y     888   888   888    888   888 
+echo o8o        o888o o888o o88888o `Y8bod8P' 
+echo ==========================================
+echo     Milos Toolkit (v1.67)
+echo     Benutzername: %username%
+echo     Computername: %computername%
+echo     Datum: %date%     
+echo ==========================================
+echo [1]   IP-Adresse anzeigen
+echo [2]   Aktive Netzwerkverbindungen
+echo [3]   CPU-Informationen
+echo [4]   RAM-Informationen
+echo [5]   Systeminformationen
+echo [6]   Prozesse anzeigen
+echo [7]   Temp-Dateien loeschen
+echo [8]   Shutdown-Timer setzen
+echo [9]   Star Wars in ASCII (Telnet)
+echo [10]  WLAN-Passwoerter anzeigen
+echo [11]  Windows-Lizenzschluessel auslesen
+echo [12]  Admin-Tools oeffnen
+echo [13]  DNS-Cache leeren
+echo [14]  Netzlaufwerk verbinden
+echo [15]  Autostart-Programme anzeigen
+echo [16]  Speicherplatz pruefen
+echo [17]  Windows Defender Quick-Scan
+echo [18]  Aktuellen Benutzer anzeigen
+echo [19]  Benutzerkonten anzeigen
+echo [20]  Neuen Benutzer erstellen
+echo [21]  Benutzer zum Admin machen
+echo [22]  Server anpingen
+echo [23]  Netzwerkgeraete anzeigen (Net View)
+echo [24]  Farbmodus wechseln (optisch)
+echo [25]  Windows version checken 
+echo [26]  Allgemeine Programme 
+echo [27]  Disk Management
+echo [28]  verwalten von Internetnetzwerken
+echo [0]   Beenden
+echo ==========================================
+set /p choice=Bitte eine Option waehlen: 
+
+if "%choice%"=="1" goto IP
+if "%choice%"=="2" goto NETSTAT
+if "%choice%"=="3" goto CPU
+if "%choice%"=="4" goto RAM
+if "%choice%"=="5" goto SYSINFO
+if "%choice%"=="6" goto TASKLIST
+if "%choice%"=="7" goto CLEANTEMP
+if "%choice%"=="8" goto SHUTDOWN
+if "%choice%"=="9" goto STARWARS
+if "%choice%"=="10" goto WLAN
+if "%choice%"=="11" goto Login 
+if "%choice%"=="12" goto ADMIN
+if "%choice%"=="13" goto DNSFLUSH
+if "%choice%"=="14" goto NETDRIVE
+if "%choice%"=="15" goto AUTOSTART
+if "%choice%"=="16" goto DISKSPACE
+if "%choice%"=="17" goto DEFENDER
+if "%choice%"=="18" goto USERNOW
+if "%choice%"=="19" goto USERLIST
+if "%choice%"=="20" goto USERCREATE
+if "%choice%"=="21" goto login2
+if "%choice%"=="22" goto Server
+if "%choice%"=="23" goto NETVIEW
+if "%choice%"=="24" goto COLORCHANGE
+if "%choice%"=="25" goto Windows
+if "%choice%"=="26" goto ALLP 
+if "%choice%"=="27" goto Disk
+if "%choice%"=="28" goto Int
+if "%choice%"=="0" exit
+goto MENU
+
+:login
+set /p eingabe=Passwort eingeben:
+if "%eingabe%"=="%pass%" goto LICENSE
+echo Falsches Passwort!
+pause
+goto login
+
+:login2
+set /p eingabe=Passwort eingeben:
+if "%eingabe%"=="%pass%" goto USERADMIN
+echo Falsches Passwort!
+pause
+goto login
+
+:IP
+cls
+ipconfig
+pause
+goto MENU
+
+:NETSTAT
+cls
+netstat -ano
+pause
+goto MENU
+
+:CPU
+cls
+wmic cpu get name
+pause
+goto MENU
+
+:RAM
+cls
+wmic memorychip get capacity
+pause
+goto MENU
+
+:SYSINFO
+cls
+systeminfo | more
+pause
+goto MENU
+
+:TASKLIST
+cls
+tasklist
+pause
+goto MENU
+
+:CLEANTEMP
+cls
+echo Temp-Dateien werden geloescht...
+del /q /f /s %TEMP%\*
+echo Fertig.
+pause
+goto MENU
+
+:SHUTDOWN
+cls
+set /p sek=In wie vielen Sekunden soll der PC herunterfahren?: 
+shutdown /s /t %sek%
+echo Shutdown-Timer gesetzt. Abbruch mit: shutdown /a
+pause
+goto MENU
+
+:STARWARS
+cls
+echo Hinweis: Telnet muss aktiviert sein!
+pause
+telnet towel.blinkenlights.nl
+goto MENU
+
+:WLAN
+cls
+echo Gespeicherte WLAN-Passwoerter:
+for /f "tokens=*" %%i in ('netsh wlan show profiles ^| findstr "Profil"') do (
+    set "line=%%i"
+    call :SHOWPASS "%%i"
+)
+pause
+goto MENU
+
+:SHOWPASS
+setlocal EnableDelayedExpansion
+set "line=%~1"
+for /f "tokens=4 delims=:" %%a in ("%line%") do (
+    set "ssid=%%a"
+    set "ssid=!ssid:~1!"
+    echo -------------------------------
+    echo WLAN: !ssid!
+    netsh wlan show profile name="!ssid!" key=clear | findstr /C:"Schluesselinhalt"
+)
+endlocal
+goto :eof
+
+:LICENSE
+cls
+echo Windows-Lizenzschluessel:
+powershell "((Get-WmiObject -query 'select * from SoftwareLicensingService').OA3xOriginalProductKey)"
+pause
+goto MENU
+
+:ADMIN
+cls
+echo === Admin-Tools ===
+echo [A] Computerverwaltung
+echo [B] Ereignisanzeige
+echo [C] Dienste
+echo [D] Benutzerverwaltung
+echo [E] Gruppenrichtlinien
+echo [F] Taskplaner
+echo [G] Verwaltung
+echo [Z] Zurueck
+set /p aSel=Auswahl: 
+if /I "%aSel%"=="A" start compmgmt.msc
+if /I "%aSel%"=="B" start eventvwr.msc
+if /I "%aSel%"=="C" start services.msc
+if /I "%aSel%"=="D" start lusrmgr.msc
+if /I "%aSel%"=="E" start gpedit.msc
+if /I "%aSel%"=="F" start taskschd.msc
+if /I "%aSel%"=="G" goto CA
+goto MENU
+
+:CA
+cls
+CONTROL ADMINTOOLS
+goto MENU
+
+:DNSFLUSH
+cls
+ipconfig /flushdns
+echo DNS-Cache geleert.
+pause
+goto MENU
+
+:NETDRIVE
+cls
+set /p dLw=Buchstabe fuer Netzlaufwerk (z.B. Z): 
+set /p pth=Pfad zum Netzlaufwerk (z.B. \\server\freigabe): 
+net use %dLw%: %pth%
+pause
+goto MENU
+
+:AUTOSTART
+cls
+wmic startup get caption,command
+pause
+goto MENU
+
+:PREFETCH
+cls
+echo Prefetch & System-TEMP loeschen...
+del /q /f /s C:\Windows\Prefetch\*
+del /q /f /s C:\Windows\Temp\*
+pause
+goto MENU
+
+:DISKSPACE
+cls
+wmic logicaldisk get size,freespace,caption
+pause
+goto MENU
+
+:DEFENDER
+cls
+powershell "Start-MpScan -ScanType QuickScan"
+pause
+goto MENU
+
+:USERNOW
+cls
+echo Aktueller Benutzer: %USERNAME%
+pause
+goto MENU
+
+:USERLIST
+cls
+net user
+pause
+goto MENU
+
+:USERCREATE
+cls
+set /p uName=Neuer Benutzername: 
+set /p pw=Passwort: 
+net user %uName% %pw% /add
+echo Benutzer erstellt.
+pause
+goto MENU
+
+:USERADMIN
+cls
+set /p adminUser=Benutzername der Admin werden soll: 
+net localgroup administrators %adminUser% /add
+echo Benutzer ist nun Administrator.
+pause
+goto MENU
+
+
+:Server
+echo 	-Ping-
+echo [A] Google anpingen
+echo [B] Ausfuehrlicher Pathping 
+echo======================
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="A" goto GOOGLE
+if /I "%aSel%"=="B" goto PING
+
+:GOOGLE
+cls
+ping 8.8.8.8
+pause
+goto MENU
+
+:PING
+cls
+pathping www.google.de
+pause
+goto MENU
+
+:NETVIEW
+cls
+net view
+pause
+goto MENU
+
+:COLORCHANGE
+echo Farbmodus gewechselt
+echo [0A] Schwarz Gruen
+echo [0B] Schwarz Blau
+echo [0C] Schwarz Rot
+echo [0D] Schwarz Pink
+echo [0E] Schwarz Gelb
+echo [0F] Schwarz Weiss
+echo [4F] Rot     Weiss
+echo=====================
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="0A" goto SG
+if /I "%aSel%"=="0B" goto SB
+if /I "%aSel%"=="0C" goto SR 
+if /I "%aSel%"=="0D" goto SP 
+if /I "%aSel%"=="0E" goto SG2
+if /I "%aSel%"=="0F" goto SW 
+if /I "%aSel%"=="4F" goto RW
+
+:RW
+cls
+color 4F
+pause
+goto MENU
+
+:SP
+cls
+color 0D
+pause
+goto MENU
+
+:SG2
+cls
+color 0E
+pause
+goto MENU
+
+:SW
+cls
+color 0F
+pause
+goto MENU
+
+:SR
+cls
+color 0C
+pause
+goto MENU
+
+:SG
+cls
+color 0A
+pause
+goto MENU
+
+:SB
+cls
+color 0B
+pause
+goto MENU
+
+:Windows 
+cls
+VER 
+pause
+goto MENU
+
+:ALLP
+echo Allgemeine Programme 
+echo [1]  Rechner
+echo [2]  DvD Player
+echo [3]  Edge
+echo [4]  Paint 
+echo=====================
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="1"  goto Rech
+if /I "%aSel%"=="2"  goto DvD
+if /I "%aSel%"=="3"  goto EX
+if /I "%aSel%"=="4"  goto Pai
+
+:Rech
+cls
+CALC
+goto MENU
+
+:DvD
+cls
+DVDPLAY
+goto MENU
+
+:EX
+EXPLORER
+goto MENU
+
+:Pai
+MSPAINT
+goto MENU
+
+:Disk
+echo Disk Management
+echo [1] Datentraegerbereinigung 
+echo [2] Datentraegerverwaltung
+echo [3] Festplattenverwaltung
+echo \/\/\/\/\/\/\/\/\/\/\/\/\/
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="1" goto Datentr
+if /I "%aSel%"=="2" goto Datentra 
+if /I "%aSel%"=="3" goto Fest
+
+:Datentr
+cls
+CLEANMGR
+goto MENU
+
+:Datentra
+DISKMGMT.msc
+goto MENU
+
+:Fest
+cls
+DISKPART
+goto MENU
+
+:Int
+echo Verwaten von Internetnetzwerken
+echo [1] Windows Firewall
+echo [2] Internetoptionen
+echo [3] Alle IP-Konfigurationen
+echo [4] Windows Firewall erweitert
+echo -------------------------------
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="128" goto Firewall
+if /I "%aSel%"=="2" goto Internetop
+if /I "%aSel%"=="3" goto IPcon
+if /I "%aSel%"=="4" goto Fire
+
+:Firewall
+FIREWALL.CPL
+
+goto MENU
+
+:Internetop
+INETCPL.CPL 
+goto MENU
+
+:IPcon 
+Ipconfig /all
+pause  
+goto MENU
+
+:Fire
+WF.msc
+goto MENU
