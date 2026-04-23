@@ -9,18 +9,16 @@ title [  Milos Toolkit  ]
 cls  
 color 05
 echo %ESC%[95m====================================================================================================%ESC%[0m                                                                                                                                             
-                                       
+                                      
 echo                                ▄▄▄  ▄▄▄     ██     ▄▄          ▄▄▄▄   
 echo                                ███  ███     ▀▀     ██         ██▀▀██  
 echo                                ████████   ████     ██        ██    ██ 
 echo                                ██ ██ ██     ██     ██        ██    ██ 
 echo                                ██ ▀▀ ██     ██     ██        ██    ██ 
 echo                                ██    ██  ▄▄▄██▄▄▄  ██▄▄▄▄▄▄   ██▄▄██  
-echo                                ▀▀    ▀▀  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀    ▀▀▀▀   
-                                        
-                                                                                                                          
+echo                                ▀▀    ▀▀  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀    ▀▀▀▀                                                                                                                           
 echo %ESC%[95m====================================================================================================%ESC%[0m
-echo                                  %ESC%[91mM%ESC%[93mI%ESC%[92mL%ESC%[96mO%ESC%[94mS%ESC%[0m %ESC%[95mT%ESC%[91mO%ESC%[93mO%ESC%[92mL%ESC%[96mK%ESC%[94mI%ESC%[95mT%ESC%[0m %ESC%[36mv1.69%ESC%[0m
+echo                                  %ESC%[91mM%ESC%[93mI%ESC%[92mL%ESC%[96mO%ESC%[94mS%ESC%[0m %ESC%[95mT%ESC%[91mO%ESC%[93mO%ESC%[92mL%ESC%[96mK%ESC%[94mI%ESC%[95mT%ESC%[0m %ESC%[36mv1.72%ESC%[0m
 echo %ESC%[36m                                 Benutzername: %username%%ESC%[0m                                
 echo %ESC%[36m                                 Computername: %computername%%ESC%[0m
 echo %ESC%[36m                                        Datum: %date%%ESC%[0m     
@@ -44,9 +42,9 @@ echo %ESC%[93m[16]%ESC%[0m  %ESC%[92mSpeicherplatz pruefen%ESC%[0m
 echo     %ESC%[30m.%ESC%[0m                                                                                                                                                                                       
 echo %ESC%[95m=====================================================================================================%ESC%[0m
 echo   %ESC%[30m.%ESC%[0m
-echo %ESC%[93m[22]%ESC%[0m  %ESC%[94mServer anpingen%ESC%[0m
-echo %ESC%[93m[23]%ESC%[0m  %ESC%[94mNetzwerkgeraete anzeigen (Net View)%ESC%[0m
-echo %ESC%[93m[24]%ESC%[0m  %ESC%[94mFarbmodus wechseln (optisch)%ESC%[0m
+echo %ESC%[93m[22]%ESC%[0m  %ESC%[94mServer anpingen%ESC%[0m                           %ESC%[93m[29]%ESC%[0m  %ESC%[94mInternet Browser%ESC%[0m 
+echo %ESC%[93m[23]%ESC%[0m  %ESC%[94mNetzwerkgeraete anzeigen (Net View)%ESC%[0m       %ESC%[93m[30]%ESC%[0m  %ESC%[94mZip software%ESC%[0m
+echo %ESC%[93m[24]%ESC%[0m  %ESC%[94mFarbmodus wechseln (optisch)%ESC%[0m              %ESC%[93m[31]%ESC%[0m  %ESC%[94mAndere software%ESC%[0m
 echo %ESC%[93m[25]%ESC%[0m  %ESC%[94mWindows version checken%ESC%[0m 
 echo %ESC%[93m[26]%ESC%[0m  %ESC%[94mAllgemeine Programme%ESC%[0m 
 echo %ESC%[93m[27]%ESC%[0m  %ESC%[94mDisk Management%ESC%[0m
@@ -83,6 +81,9 @@ if "%choice%"=="25" goto Windows
 if "%choice%"=="26" goto ALLP 
 if "%choice%"=="27" goto Disk
 if "%choice%"=="28" goto Int
+if "%choice%"=="29" goto Browser
+if "%choice%"=="30" goto zipSoftware
+if "%choice%"=="31" goto OtherSoftware
 if "%choice%"=="0" exit
 goto MENU
 color 05
@@ -102,7 +103,17 @@ goto login
 
 :IP
 cls
-ipconfig
+echo  Optionen zur IP-Anzeige: 
+echo  [A] lokale IP 
+echo  [B] Oeffentliche IP-Adresse (Browser)
+echo  [C] Oeffentliche IP mit nslookup
+echo  [Z] Zurueck
+set /p aSel=Auswahl:
+if /I "%aSel%"=="A" ipconfig
+if /I "%aSel%"=="B" powershell "(Invoke-WebRequest -uri 'https://api.ipify.org').Content"
+if /I "%aSel%"=="C" nslookup myip.opendns.com resolver1.opendns.com
+if /I "%aSel%"=="Z" goto MENU
+
 pause
 goto MENU
 
@@ -287,6 +298,7 @@ goto MENU
 
 
 :Server
+cls
 echo 	-Ping-
 echo [A] Google anpingen
 echo [B] Ausfuehrlicher Pathping 
@@ -478,4 +490,60 @@ goto MENU
 
 :Fire
 WF.msc
+goto MENU
+
+:Browser
+cls 
+echo Browser downloaden:
+echo ===============================     
+echo [1] Firefox
+echo [2] Chrome 
+echo [3] Opera
+echo [4] Edge
+echo [99] Zurueck
+echo ===============================
+set /p aSel=Auswahl:      
+
+if /I "%aSel%"=="1" winget install Firefox
+if /I "%aSel%"=="2" winget install Google.Chrome
+if /I "%aSel%"=="3" winget install Opera.Opera
+if /I "%aSel%"=="4" winget install Microsoft.Edge
+if /I "%aSel%"=="99" goto MENU 
+
+goto MENU
+
+:zipSoftware
+cls
+echo Software downloaden:
+echo ===============================  
+echo [1] 7-Zip
+echo [2] WinRAR
+echo [99] Zurueck
+echo ===============================
+set /p aSel=Auswahl: 
+
+if /I "%aSel%"=="1" winget install 7zip 
+if /I "%aSel%"=="2" winget install WinRAR
+if /I "%aSel%"=="99" goto MENU
+
+goto MENU
+
+:OtherSoftware
+cls
+echo Software downloaden:
+echo ===============================
+echo [1] VLC Media Player
+echo [2] Discord        
+echo [3] Spotify
+echo [4] Steam
+echo [99] Zurueck
+echo ===============================
+set /p aSel=Auswahl:
+
+if /I "%aSel%"=="1" winget install VLC
+if /I "%aSel%"=="2" winget install Discord.Discord
+if /I "%aSel%"=="3" winget install Spotify.Spotify
+if /I "%aSel%"=="4" winget install Valve.Steam
+if /I "%aSel%"=="99" goto MENU 
+
 goto MENU
