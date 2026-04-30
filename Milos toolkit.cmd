@@ -18,7 +18,7 @@ echo                                ██ ▀▀ ██     ██     ██  
 echo                                ██    ██  ▄▄▄██▄▄▄  ██▄▄▄▄▄▄   ██▄▄██  
 echo                                ▀▀    ▀▀  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀    ▀▀▀▀                                                                                                                           
 echo %ESC%[95m====================================================================================================%ESC%[0m
-echo                                  %ESC%[91mM%ESC%[93mI%ESC%[92mL%ESC%[96mO%ESC%[94mS%ESC%[0m %ESC%[95mT%ESC%[91mO%ESC%[93mO%ESC%[92mL%ESC%[96mK%ESC%[94mI%ESC%[95mT%ESC%[0m %ESC%[36mv1.72%ESC%[0m
+echo                                  %ESC%[91mM%ESC%[93mI%ESC%[92mL%ESC%[96mO%ESC%[94mS%ESC%[0m %ESC%[95mT%ESC%[91mO%ESC%[93mO%ESC%[92mL%ESC%[96mK%ESC%[94mI%ESC%[95mT%ESC%[0m %ESC%[36mv1.73%ESC%[0m
 echo %ESC%[36m                                 Benutzername: %username%%ESC%[0m                                
 echo %ESC%[36m                                 Computername: %computername%%ESC%[0m
 echo %ESC%[36m                                        Datum: %date%%ESC%[0m     
@@ -45,7 +45,7 @@ echo   %ESC%[30m.%ESC%[0m
 echo %ESC%[93m[22]%ESC%[0m  %ESC%[94mServer anpingen%ESC%[0m                           %ESC%[93m[29]%ESC%[0m  %ESC%[94mInternet Browser%ESC%[0m 
 echo %ESC%[93m[23]%ESC%[0m  %ESC%[94mNetzwerkgeraete anzeigen (Net View)%ESC%[0m       %ESC%[93m[30]%ESC%[0m  %ESC%[94mZip software%ESC%[0m
 echo %ESC%[93m[24]%ESC%[0m  %ESC%[94mFarbmodus wechseln (optisch)%ESC%[0m              %ESC%[93m[31]%ESC%[0m  %ESC%[94mAndere software%ESC%[0m
-echo %ESC%[93m[25]%ESC%[0m  %ESC%[94mWindows version checken%ESC%[0m 
+echo %ESC%[93m[25]%ESC%[0m  %ESC%[94mWindows version checken%ESC%[0m                   %ESC%[93m[32]%ESC%[0m  %ESC%[94mMeme%ESC%[0m
 echo %ESC%[93m[26]%ESC%[0m  %ESC%[94mAllgemeine Programme%ESC%[0m 
 echo %ESC%[93m[27]%ESC%[0m  %ESC%[94mDisk Management%ESC%[0m
 echo %ESC%[93m[28]%ESC%[0m  %ESC%[94mverwalten von Internetnetzwerken%ESC%[0m
@@ -84,6 +84,8 @@ if "%choice%"=="28" goto Int
 if "%choice%"=="29" goto Browser
 if "%choice%"=="30" goto zipSoftware
 if "%choice%"=="31" goto OtherSoftware
+if "%choice%"=="32" goto meme
+if "%choice%"=="67" goto ipad
 if "%choice%"=="0" exit
 goto MENU
 color 05
@@ -335,6 +337,7 @@ pause
 goto MENU
 
 :COLORCHANGE
+cls 
 echo Farbmodus gewechselt
 echo [0A] Schwarz Gruen
 echo [0B] Schwarz Blau
@@ -403,6 +406,7 @@ pause
 goto MENU
 
 :ALLP
+cls
 echo Allgemeine Programme 
 echo [1]  Rechner
 echo [2]  DvD Player
@@ -427,14 +431,17 @@ DVDPLAY
 goto MENU
 
 :EX
+cls
 EXPLORER
 goto MENU
 
 :Pai
+cls
 MSPAINT
 goto MENU
 
 :Disk
+cls
 echo Disk Management
 echo [1] Datentraegerbereinigung 
 echo [2] Datentraegerverwaltung
@@ -461,6 +468,7 @@ DISKPART
 goto MENU
 
 :Int
+cls  
 echo Verwaten von Internetnetzwerken
 echo [1] Windows Firewall
 echo [2] Internetoptionen
@@ -547,3 +555,29 @@ if /I "%aSel%"=="4" winget install Valve.Steam
 if /I "%aSel%"=="99" goto MENU 
 
 goto MENU
+
+:ipad
+cls 
+color 03                                                                                                                                                                                                                                                                                                                      
+echo                           ▄▄                      ▄▄                            ▄▄▄  ▄▄▄     ██     ▄▄▄▄               
+echo                           ██                      ██                            ███  ███     ▀▀     ▀▀██               
+echo ████▄██▄   ▄█████▄   ▄███▄██   ▄████▄             ██▄███▄   ▀██  ███            ████████   ████       ██       ▄████▄  
+echo ██ ██ ██   ▀ ▄▄▄██  ██▀  ▀██  ██▄▄▄▄██            ██▀  ▀██   ██▄ ██             ██ ██ ██     ██       ██      ██▀  ▀██ 
+echo ██ ██ ██  ▄██▀▀▀██  ██    ██  ██▀▀▀▀▀▀            ██    ██    ████▀             ██ ▀▀ ██     ██       ██      ██    ██ 
+echo ██ ██ ██  ██▄▄▄███  ▀██▄▄███  ▀██▄▄▄▄█            ███▄▄██▀     ███              ██    ██  ▄▄▄██▄▄▄    ██▄▄▄   ▀██▄▄██▀ 
+echo ▀▀ ▀▀ ▀▀   ▀▀▀▀ ▀▀    ▀▀▀ ▀▀    ▀▀▀▀▀             ▀▀ ▀▀▀       ██               ▀▀    ▀▀  ▀▀▀▀▀▀▀▀     ▀▀▀▀     ▀▀▀▀   
+echo                                                              ███                                                                                                                                                                               
+pause
+
+goto MENU
+
+:meme
+cls
+REM 
+set /a x=0
+:loop
+start http://niceme.me
+set /a x=%x%+1
+if %x% NEQ 1000 goto loop
+exit
+
